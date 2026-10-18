@@ -6,6 +6,7 @@ import { findAirport, isAirportCode } from './airports.ts';
 import { config } from './config.ts';
 import { nearbyFlights } from './nearby.ts';
 import { timesAvailable } from './sources/aeroapi.ts';
+import { windAt } from './sources/weather.ts';
 
 const MIME: Record<string, string> = {
     '.html': 'text/html; charset=utf-8',
@@ -78,6 +79,23 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
             airports: found.flatMap((f) => (f.airport ? [f.airport] : [])),
             unknown: found.filter((f) => !f.airport).map((f) => f.code),
         });
+        return;
+    }
+    if (url.pathname === '/api/wind') {
+        const lat = parseCoord(url.searchParams.get('lat'), 90);
+        const lon = parseCoord(url.searchParams.get('lon'), 180);
+        const icao = (url.searchParams.get('icao') ?? '').toUpperCase();
+        // Only stations from the airport table, so the endpoint cannot be used to probe arbitrary ids
+        if (lat === null || lon === null || (icao !== '' && findAirport(icao)?.icao !== icao)) {
+            sendJson(res, 400, { error: 'Invalid lat, lon or icao' });
+            return;
+        }
+        try {
+            sendJson(res, 200, { wind: await windAt(lat, lon, icao || null) });
+        } catch (error) {
+            console.warn(String(error));
+            sendJson(res, 502, { error: 'Weather source unavailable' });
+        }
         return;
     }
     if (url.pathname === '/api/nearby') {

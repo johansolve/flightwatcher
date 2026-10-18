@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="vendor/alegreya/wght.css">
     <link rel="stylesheet" href="vendor/alegreya/wght-italic.css">
     <link rel="stylesheet" href="vendor/im-fell/400.css">
+    <link rel="stylesheet" href="vendor/jost/wght.css">
+    <link rel="stylesheet" href="vendor/josefin/wght.css">
+    <link rel="stylesheet" href="vendor/yellowtail/400.css">
     <link rel="stylesheet" href="style.css">
     <script type="module" src="app.js"></script>
 </head>
@@ -23,6 +26,11 @@
                 <span class="place-name" id="place-name"></span>
             </div>
             <p class="status" id="status">Hämtar plats …</p>
+            <p class="wind" id="wind" hidden>
+                <span class="wind-arrow" aria-hidden="true">↓</span>
+                <span class="wind-text"></span>
+                <small class="wind-source"></small>
+            </p>
 
             <details class="places">
                 <summary>Ändra flygplatser</summary>
@@ -55,6 +63,8 @@
                 <select id="theme">
                     <option value="atc">Flygledare</option>
                     <option value="plansch">Skolplansch</option>
+                    <option value="galleri">Tavelvägg</option>
+                    <option value="retro">Retro</option>
                 </select>
             </label>
 
@@ -62,7 +72,8 @@
                 Positioner från <a href="https://adsb.lol">adsb.lol</a> och <a href="https://adsb.fi">adsb.fi</a> (ODbL),
                 rutter från <a href="https://www.adsbdb.com">adsbdb</a>,
                 tider från <a href="https://www.flightaware.com/commercial/aeroapi/">FlightAware</a>,
-                foton från <a href="https://www.planespotters.net">Planespotters.net</a>.
+                foton från <a href="https://www.planespotters.net">Planespotters.net</a>,
+                vind från <a href="https://aviationweather.gov">NOAA aviationweather.gov</a> och <a href="https://open-meteo.com">Open-Meteo</a> (CC BY 4.0).
             </p>
         </aside>
 

@@ -7,13 +7,16 @@ It is a small, self-hosted web page meant for a home screen, a wall display or j
 ## Features
 
 - **Live traffic within a radius** (1–50 km) of a chosen airport or your own position, refreshed every 10 seconds. Between refreshes, aircraft glide on the map by dead reckoning from their speed and track.
+- **Wind at the chosen place**: observed wind from the airport's METAR, or modelled wind from Open-Meteo for your own position and airports without a METAR.
 - **Map** with range rings and aircraft symbols that show both what the aircraft is (jet, turboprop, light aircraft, helicopter) and what it is doing (climbing, descending, cruising, on the ground).
 - **Route and times**: origin and destination, scheduled, estimated and actual departure and arrival, with delays highlighted.
 - **Photos** of the actual airframe from Planespotters.net, credited to the photographer. When no photo exists, an icon for the aircraft type is shown instead, so the layout stays stable.
 - **Editable airport list**: add or remove airports by IATA or ICAO code directly in the page (for example `MMX` or `ESMS`). The list is stored per browser.
-- **Two themes**, switchable from a dropdown:
+- **Four themes**, switchable from a dropdown:
   - *Flygledare* (air traffic control): a dark strip bay with flight progress strips colour-coded by phase of flight, photos as perforated stamps and a radar-style map.
   - *Skolplansch* (school wall chart): an aged paper chart hanging from wooden rods, with numbered figures, facts written as prose, softly vignetted photos and a watercolour map.
+  - *Tavelvägg* (gallery wall): every aircraft as a framed print with a white mat, alternating black and oak frames, on a muted wall.
+  - *Retro*: a very clean 1950s look with pastel accents, atomic starbursts and rounded photos.
 - Light on resources: no build step, no framework, a single Node process with an SQLite cache.
 
 ## Requirements
@@ -57,6 +60,7 @@ Node server (src/server.ts)
   ├─ ADS-B positions    adsb.lol, falls back to adsb.fi    shared for 5 s, failing source skipped for 60 s
   ├─ Aircraft and route adsbdb.com                         cached 30 days / 24 h in SQLite
   ├─ Times              FlightAware AeroAPI                cached 30 min, max 10 lookups per minute
+  ├─ Wind               METAR, else Open-Meteo             cached 10 / 15 min
   └─ Airports and types src/data/*.json                    loaded at startup
 Browser → Planespotters.net photo API directly (required by its terms)
 ```
@@ -81,8 +85,10 @@ Flightwatcher relies on free services run by others. Please respect their terms 
 | Map tiles | [Stadia Maps](https://stadiamaps.com) (Alidade Smooth Dark, Stamen Watercolor), © OpenMapTiles, © OpenStreetMap contributors | Free without an account on localhost; a (free) account is needed for a public domain |
 | Airports | [OurAirports](https://ourairports.com/data/) | Public domain |
 | Aircraft types | ICAO Doc 8643 designators via [tar1090-db](https://github.com/wiedehopf/tar1090-db) | Factual reference data |
+| Wind at airports | [NOAA aviationweather.gov](https://aviationweather.gov/data/api/) METAR | US government data, free |
+| Wind elsewhere | [Open-Meteo](https://open-meteo.com) | CC BY 4.0, attribution required; free for non-commercial use |
 | Fallback icons | [Pinhead Map Icons](https://github.com/waysidemapping/pinhead) | CC0 |
-| Fonts | Archivo, IBM Plex Mono, Alegreya, IM Fell English SC via Fontsource | SIL Open Font License |
+| Fonts | Archivo, IBM Plex Mono, Alegreya, IM Fell English SC, Jost, Josefin Sans, Yellowtail via Fontsource | SIL Open Font License / Apache 2.0 |
 
 ## Hosting publicly
 

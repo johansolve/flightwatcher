@@ -6,6 +6,7 @@ const STORAGE_PREFIX = 'flightwatcher.';
 const MY_POSITION = 'HÄR';
 const COMPASS = ['N', 'NO', 'O', 'SO', 'S', 'SV', 'V', 'NV'];
 const COMPASS_WORDS = ['norr', 'nordost', 'öster', 'sydost', 'söder', 'sydväst', 'väster', 'nordväst'];
+const WIND_REFRESH_MS = 10 * 60 * 1000;
 // Top-down silhouettes, nose up; each is one path so overlapping parts share one outline
 const GLYPHS = {
     jet: 'M12 2c.8 0 1.3.9 1.3 2v5.2l7.7 4.6v2l-7.7-2.3v4.6l2.2 1.7V21L12 20l-3.5 1v-1.2l2.2-1.7v-4.6L3 15.8v-2l7.7-4.6V4c0-1.1.5-2 1.3-2z',
@@ -40,12 +41,15 @@ const els = {
     placesAdd: document.getElementById('places-add'),
     placesCode: document.getElementById('places-code'),
     placesMsg: document.getElementById('places-msg'),
+    wind: document.getElementById('wind'),
 };
 
 const state = {
     config: null,
     locations: [],
     pollGeneration: 0,
+    icao: null,
+    windRequest: '',
     lat: null,
     lon: null,
     radius: 5,
@@ -64,10 +68,18 @@ const decimalFmt = new Intl.NumberFormat('sv-SE', { maximumFractionDigits: 1 });
 const timeFmt = new Intl.DateTimeFormat('sv-SE', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Stockholm' });
 
 // Initial view is replaced by frameMap(); circles need a view before they can be added
-const map = L.map('map', { center: [56.3, 12.85], zoom: 10, zoomControl: false, scrollWheelZoom: false });
+const map = L.map('map', { center: [56.3, 12.85], zoom: 10, zoomSnap: 0.25, zoomControl: false, scrollWheelZoom: false });
 map.attributionControl.setPrefix('<a href="https://leafletjs.com">Leaflet</a>');
 const BASEMAPS = {
     atc: L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+        maxZoom: 16,
+        attribution: TILE_ATTRIBUTION,
+    }),
+    galleri: L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+        maxZoom: 16,
+        attribution: TILE_ATTRIBUTION,
+    }),
+    retro: L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
         maxZoom: 16,
         attribution: TILE_ATTRIBUTION,
     }),
@@ -112,6 +124,11 @@ function applyTheme(name) {
         } else {
             map.removeLayer(layer);
         }
+    }
+    // Themes change the map's size; re-measure and re-frame the range ring
+    map.invalidateSize();
+    if (state.lat !== null) {
+        frameMap();
     }
 }
 
@@ -554,6 +571,57 @@ function frameMap() {
     map.fitBounds(ring.getBounds(), { padding: [10, 10], animate: false });
 }
 
+function formatWind(w) {
+    const ms = (kt) => numberFmt.format(kt * 0.5144);
+    const strength = `${ms(w.speedKt)} m/s (${numberFmt.format(w.speedKt)} knop)`;
+    let text;
+    if (w.speedKt < 1) {
+        text = 'Stiltje';
+    } else if (w.variable || w.directionDeg === null) {
+        text = `Varierande vind, ${strength}`;
+    } else {
+        const deg = String(Math.round(w.directionDeg) % 360).padStart(3, '0');
+        text = `Vind från ${COMPASS_WORDS[Math.round(w.directionDeg / 45) % 8]} (${deg}°), ${strength}`;
+    }
+    if (w.speedKt >= 1 && w.gustKt && w.gustKt > w.speedKt) {
+        text += `, byar ${ms(w.gustKt)} m/s`;
+    }
+    return text;
+}
+
+/** Wind for the current place: the airport's METAR, or modelled wind elsewhere. */
+async function loadWind() {
+    if (state.lat === null) {
+        return;
+    }
+    const params = new URLSearchParams({ lat: state.lat.toFixed(4), lon: state.lon.toFixed(4) });
+    if (state.icao) {
+        params.set('icao', state.icao);
+    }
+    const requested = params.toString();
+    state.windRequest = requested;
+    try {
+        const res = await fetch(`/api/wind?${params}`);
+        const data = res.ok ? await res.json() : null;
+        if (state.windRequest !== requested) {
+            return;
+        }
+        const w = data && data.wind;
+        els.wind.hidden = !w;
+        if (!w) {
+            return;
+        }
+        els.wind.querySelector('.wind-text').textContent = formatWind(w);
+        const arrow = els.wind.querySelector('.wind-arrow');
+        arrow.hidden = w.directionDeg === null || w.variable || w.speedKt < 1;
+        arrow.style.setProperty('--wind-dir', `${w.directionDeg || 0}deg`);
+        const time = w.observed ? ` ${timeFmt.format(new Date(w.observed))}` : '';
+        els.wind.querySelector('.wind-source').textContent = w.source === 'metar' ? `METAR ${w.station}${time}` : `Open-Meteo, beräknat${time}`;
+    } catch {
+        els.wind.hidden = true;
+    }
+}
+
 function moveTo(lat, lon) {
     state.lat = lat;
     state.lon = lon;
@@ -564,6 +632,7 @@ function moveTo(lat, lon) {
     }
     tracked.clear();
     poll();
+    loadWind();
 }
 
 function chooseLocation(code) {
@@ -573,6 +642,7 @@ function chooseLocation(code) {
         els.placeCode.textContent = MY_POSITION;
         els.placeName.textContent = 'Min plats';
         state.placeShort = 'dig';
+        state.icao = null;
         setStatus('Hämtar din plats …');
         navigator.geolocation.getCurrentPosition(
             (pos) => moveTo(pos.coords.latitude, pos.coords.longitude),
@@ -589,6 +659,7 @@ function chooseLocation(code) {
     els.placeCode.textContent = loc.code;
     els.placeName.textContent = loc.name;
     state.placeShort = loc.short;
+    state.icao = loc.icao || null;
     moveTo(loc.lat, loc.lon);
 }
 
@@ -737,6 +808,7 @@ async function init() {
     if (!reducedMotion) {
         setInterval(glide, GLIDE_MS);
     }
+    setInterval(loadWind, WIND_REFRESH_MS);
 
     chooseLocation(load('location') || config.defaultLocation);
 }

@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 
 export interface Airport {
     code: string;
+    icao: string | null;
     name: string;
     short: string;
     lat: number;
@@ -35,5 +36,5 @@ export function findAirport(code: string): Airport | null {
         return null;
     }
     const [icao, iata, name, city, lat, lon] = row;
-    return { code: iata || icao, name, short: city || name, lat, lon };
+    return { code: iata || icao, icao: icao || null, name, short: city || name, lat, lon };
 }

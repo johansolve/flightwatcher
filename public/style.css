@@ -112,6 +112,29 @@ a {
     font-size: 0.9rem;
 }
 
+/* Wind line; colours inherit from each theme's sidebar */
+.wind {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.wind-arrow {
+    display: inline-block;
+    margin-right: 0.2rem;
+    font-weight: 700;
+    transform: rotate(var(--wind-dir, 0deg));
+}
+
+.wind-arrow[hidden] {
+    display: none;
+}
+
+.wind-source {
+    display: block;
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
 .places {
     color: var(--on-bay-soft);
     font-size: 0.9rem;
@@ -1023,5 +1046,666 @@ a {
 
     [data-theme="plansch"] .place-code {
         font-size: 4.5rem;
+    }
+}
+
+/* ===== Theme: Tavelvägg (gallery wall of framed prints) ===== */
+
+[data-theme="galleri"] {
+    --wall: #aab3a2;
+    --mat: #f7f5ef;
+    --mat-line: #d6d0c2;
+    --ink: #2b2a27;
+    --ink-soft: #77736a;
+    --frame: #1f1d1b;
+    --climb: #5e7d62;
+    --descend: #b8763a;
+    --cruise: #4f6680;
+    --ground: #9a958a;
+    --sans: "Jost Variable", Futura, "Century Gothic", sans-serif;
+    --hang-shadow: 0 16px 24px -10px rgb(0 0 0 / 0.45), 0 2px 5px rgb(0 0 0 / 0.18);
+}
+
+[data-theme="galleri"] body {
+    background:
+        radial-gradient(ellipse at 20% 10%, rgb(255 255 255 / 0.18), transparent 55%),
+        radial-gradient(ellipse at 80% 85%, rgb(0 0 0 / 0.08), transparent 60%),
+        var(--wall);
+    color: var(--ink);
+    font: 400 16px/1.5 var(--sans);
+}
+
+[data-theme="galleri"] :focus-visible,
+[data-theme="galleri"] .place:focus-within {
+    outline-color: var(--ink);
+}
+
+[data-theme="galleri"] .layout {
+    gap: 3.5rem;
+    padding: 3.5rem 2rem 4rem;
+}
+
+/* The sidebar is one framed poster */
+[data-theme="galleri"] .chart {
+    position: static;
+    align-self: start;
+    height: auto;
+    padding: 2.2rem 2rem;
+    overflow: visible;
+    border: 14px solid var(--frame);
+    background: var(--mat);
+    box-shadow: var(--hang-shadow);
+}
+
+[data-theme="galleri"] .place-code {
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 5.6rem;
+    font-weight: 300;
+    font-stretch: normal;
+    line-height: 0.9;
+    letter-spacing: 0.1em;
+}
+
+[data-theme="galleri"] .place-code::after {
+    border-color: var(--ink-soft);
+}
+
+[data-theme="galleri"] .place-name {
+    margin-top: 0.7rem;
+    font-family: var(--sans);
+    font-size: 1.05rem;
+    font-weight: 400;
+    font-stretch: normal;
+    letter-spacing: 0.06em;
+}
+
+[data-theme="galleri"] .status,
+[data-theme="galleri"] .places,
+[data-theme="galleri"] .radius,
+[data-theme="galleri"] .legend,
+[data-theme="galleri"] .theme,
+[data-theme="galleri"] .credits {
+    color: var(--ink-soft);
+}
+
+[data-theme="galleri"] .places-code {
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 500;
+}
+
+[data-theme="galleri"] .places-add input,
+[data-theme="galleri"] .places-add button,
+[data-theme="galleri"] .theme select {
+    border-color: var(--mat-line);
+    background: transparent;
+    color: var(--ink);
+    font-family: var(--sans);
+}
+
+[data-theme="galleri"] .radius output {
+    color: var(--ink);
+    font-family: var(--sans);
+}
+
+[data-theme="galleri"] .radius input {
+    accent-color: var(--ink);
+}
+
+[data-theme="galleri"] .legend li::before {
+    border-radius: 50%;
+}
+
+[data-theme="galleri"] .map-frame {
+    border: 0;
+    box-shadow: 0 0 0 1px var(--mat-line);
+}
+
+[data-theme="galleri"] .map {
+    background: #eceae3;
+}
+
+[data-theme="galleri"] .leaflet-tile-pane {
+    filter: grayscale(0.35) sepia(0.15) contrast(0.95);
+}
+
+[data-theme="galleri"] .leaflet-control-attribution.leaflet-control {
+    background: rgb(247 245 239 / 0.85);
+    color: var(--ink-soft);
+}
+
+[data-theme="galleri"] .leaflet-control-attribution a {
+    color: var(--cruise);
+}
+
+[data-theme="galleri"] .range-ring {
+    stroke: var(--ink);
+    stroke-opacity: 0.4;
+}
+
+[data-theme="galleri"] .range-ring-inner {
+    stroke-opacity: 0.2;
+}
+
+[data-theme="galleri"] .centre-mark {
+    fill: var(--mat);
+    stroke: var(--ink);
+}
+
+[data-theme="galleri"] .plane-glyph {
+    stroke: var(--mat);
+}
+
+[data-theme="galleri"] .plane-label {
+    background: var(--mat);
+    color: var(--ink);
+    font: 500 10px/1.5 var(--sans);
+    letter-spacing: 0.04em;
+}
+
+[data-theme="galleri"] .selected .plane-label {
+    background: var(--ink);
+    color: var(--mat);
+}
+
+/* Each aircraft is a framed print with a white mat and a small label */
+
+[data-theme="galleri"] .bay {
+    padding: 0;
+}
+
+[data-theme="galleri"] .strips {
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: 3rem 2.5rem;
+    align-items: start;
+    max-width: none;
+}
+
+[data-theme="galleri"] .strip {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.5rem 1.5rem 1.3rem;
+    border: 11px solid var(--frame);
+    background: var(--mat);
+    box-shadow: var(--hang-shadow);
+    color: var(--ink);
+    text-align: center;
+    transition: none;
+}
+
+/* Alternate black and oak frames, as on a real gallery wall */
+[data-theme="galleri"] .strip:nth-child(even) {
+    border-image: linear-gradient(135deg, #b58858, #8d6238 35%, #b08154 65%, #87603a) 1;
+}
+
+[data-theme="galleri"] .strip.selected {
+    transform: none;
+    box-shadow: var(--hang-shadow);
+    outline: 2px solid var(--ink-soft);
+    outline-offset: 8px;
+}
+
+[data-theme="galleri"] .stamp {
+    width: 100%;
+}
+
+[data-theme="galleri"] .stamp-link {
+    filter: none;
+}
+
+[data-theme="galleri"] .stamp-paper {
+    padding: 0;
+    background: none;
+    mask: none;
+}
+
+[data-theme="galleri"] .stamp img {
+    box-shadow: 0 0 0 1px var(--mat-line);
+}
+
+[data-theme="galleri"] .sketch {
+    fill: var(--ink);
+    opacity: 0.14;
+}
+
+[data-theme="galleri"] .stamp-credit {
+    display: grid;
+    margin-top: 0.6rem;
+    color: var(--ink-soft);
+    font-size: 0.7rem;
+}
+
+[data-theme="galleri"] .stamp-type {
+    display: block;
+    color: var(--ink);
+    font-size: 0.8rem;
+}
+
+[data-theme="galleri"] .strip-ident {
+    justify-content: center;
+    align-items: center;
+    gap: 0.2rem 0.7rem;
+    font-family: var(--sans);
+}
+
+[data-theme="galleri"] .strip-ident::before {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--phase);
+}
+
+[data-theme="galleri"] .callsign {
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+}
+
+[data-theme="galleri"] .type-code,
+[data-theme="galleri"] .registration {
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+}
+
+[data-theme="galleri"] .route {
+    margin-top: 0.15rem;
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    font-weight: 400;
+    font-stretch: normal;
+}
+
+[data-theme="galleri"] .boxes,
+[data-theme="galleri"] .operator {
+    display: none;
+}
+
+[data-theme="galleri"] .prose {
+    display: block;
+    margin: 0.5rem 0 0;
+    color: var(--ink-soft);
+    font-size: 0.86rem;
+    line-height: 1.5;
+    text-wrap: pretty;
+}
+
+[data-theme="galleri"] .empty {
+    border: 1px solid var(--ink-soft);
+    color: var(--ink);
+}
+
+@media (max-width: 56rem) {
+    [data-theme="galleri"] .layout {
+        gap: 2.5rem;
+        padding: 2rem 1rem 3rem;
+    }
+
+    [data-theme="galleri"] .chart {
+        padding: 1.6rem 1.3rem;
+    }
+
+    [data-theme="galleri"] .place-code {
+        font-size: 4.4rem;
+    }
+
+    [data-theme="galleri"] .strip {
+        padding-left: 1.5rem;
+    }
+}
+
+/* ===== Theme: Retro (clean 1950s) ===== */
+
+[data-theme="retro"] {
+    --paper: #f8f6f1;
+    --ink: #2f3437;
+    --ink-soft: #7b8186;
+    --line: #e2ded4;
+    --mint: #a8d8c8;
+    --butter: #f3d27a;
+    --turquoise: #3e8e9b;
+    --climb: #3e9c8a;
+    --descend: #d9787a;
+    --cruise: #3e7e9b;
+    --ground: #a8a9a2;
+    --sans: "Josefin Sans Variable", Futura, sans-serif;
+    --script: "Yellowtail", cursive;
+    --starburst: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 0l2.2 7.2 6.3-3.7-3.7 6.3L24 12l-7.2 2.2 3.7 6.3-6.3-3.7L12 24l-2.2-7.2-6.3 3.7 3.7-6.3L0 12l7.2-2.2-3.7-6.3 6.3 3.7z'/%3E%3C/svg%3E");
+}
+
+[data-theme="retro"] body {
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 16px/1.5 var(--sans);
+}
+
+[data-theme="retro"] :focus-visible,
+[data-theme="retro"] .place:focus-within {
+    outline-color: var(--turquoise);
+}
+
+[data-theme="retro"] .layout {
+    gap: 4rem;
+    padding: 0 2.5rem;
+}
+
+[data-theme="retro"] .chart {
+    padding: 3.5rem 0 2.5rem;
+}
+
+[data-theme="retro"] .place-code {
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 6.4rem;
+    font-weight: 300;
+    font-stretch: normal;
+    line-height: 0.85;
+    letter-spacing: 0.04em;
+}
+
+[data-theme="retro"] .place-code::after {
+    border-color: var(--ink-soft);
+}
+
+[data-theme="retro"] .place-name {
+    margin-top: 0.5rem;
+    color: var(--descend);
+    font-family: var(--script);
+    font-size: 1.9rem;
+    font-weight: 400;
+    font-stretch: normal;
+    line-height: 1.2;
+}
+
+/* Atomic-age starburst, used sparingly */
+[data-theme="retro"] .place-name::before {
+    content: "";
+    display: inline-block;
+    width: 0.55em;
+    height: 0.55em;
+    margin-right: 0.3em;
+    background: var(--butter);
+    mask: var(--starburst) center / contain no-repeat;
+}
+
+[data-theme="retro"] .status,
+[data-theme="retro"] .places,
+[data-theme="retro"] .radius,
+[data-theme="retro"] .legend,
+[data-theme="retro"] .theme,
+[data-theme="retro"] .credits {
+    color: var(--ink-soft);
+}
+
+[data-theme="retro"] .places-code {
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 600;
+}
+
+[data-theme="retro"] .places-add input,
+[data-theme="retro"] .places-add button,
+[data-theme="retro"] .theme select {
+    border-color: var(--line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--ink);
+    font-family: var(--sans);
+}
+
+[data-theme="retro"] .places-add input {
+    padding-left: 0.8rem;
+}
+
+[data-theme="retro"] .radius output {
+    color: var(--ink);
+    font-family: var(--sans);
+}
+
+[data-theme="retro"] .radius input {
+    accent-color: var(--turquoise);
+}
+
+[data-theme="retro"] .legend li::before {
+    background: var(--phase);
+    mask: var(--starburst) center / contain no-repeat;
+}
+
+[data-theme="retro"] .map-frame {
+    border: 0;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+[data-theme="retro"] .map {
+    background: #eef0ec;
+}
+
+[data-theme="retro"] .leaflet-tile-pane {
+    filter: saturate(0.8);
+}
+
+[data-theme="retro"] .leaflet-control-attribution.leaflet-control {
+    background: rgb(248 246 241 / 0.85);
+    color: var(--ink-soft);
+}
+
+[data-theme="retro"] .leaflet-control-attribution a {
+    color: var(--turquoise);
+}
+
+[data-theme="retro"] .range-ring {
+    stroke: var(--ink);
+    stroke-opacity: 0.4;
+}
+
+[data-theme="retro"] .range-ring-inner {
+    stroke-opacity: 0.2;
+}
+
+[data-theme="retro"] .centre-mark {
+    fill: var(--butter);
+    stroke: var(--ink);
+}
+
+[data-theme="retro"] .plane-glyph {
+    stroke: #fff;
+}
+
+[data-theme="retro"] .plane-label {
+    border-left: 0;
+    border-radius: 999px;
+    padding: 0 6px;
+    background: #fff;
+    color: var(--ink);
+    font: 600 10px/1.6 var(--sans);
+    letter-spacing: 0.06em;
+}
+
+[data-theme="retro"] .selected .plane-label {
+    background: var(--ink);
+    color: #fff;
+}
+
+/* Aircraft */
+
+[data-theme="retro"] .bay {
+    padding: 3.5rem 0 4rem;
+}
+
+[data-theme="retro"] .strips {
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: 3.5rem 3rem;
+    align-items: start;
+    max-width: none;
+}
+
+[data-theme="retro"] .strip {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    color: var(--ink);
+    transition: none;
+}
+
+[data-theme="retro"] .strip.selected {
+    transform: none;
+    box-shadow: none;
+}
+
+[data-theme="retro"] .strip.selected .callsign {
+    color: var(--turquoise);
+}
+
+[data-theme="retro"] .stamp {
+    width: 100%;
+}
+
+[data-theme="retro"] .stamp-link {
+    filter: none;
+}
+
+[data-theme="retro"] .stamp-paper {
+    justify-content: flex-start;
+    padding: 0;
+    background: none;
+    mask: none;
+}
+
+[data-theme="retro"] .stamp img {
+    border-radius: 14px;
+}
+
+[data-theme="retro"] .strip:not(.has-photo) .stamp-paper {
+    justify-content: center;
+    border-radius: 14px;
+    background: #eeece6;
+}
+
+[data-theme="retro"] .sketch {
+    fill: var(--ink);
+    opacity: 0.18;
+}
+
+[data-theme="retro"] .stamp-credit {
+    display: grid;
+    margin-top: 0.6rem;
+    color: var(--ink-soft);
+    font-size: 0.72rem;
+}
+
+[data-theme="retro"] .stamp-type {
+    display: block;
+    color: var(--ink);
+    font-size: 0.82rem;
+}
+
+[data-theme="retro"] .strip-ident {
+    align-items: center;
+    gap: 0.2rem 0.8rem;
+    font-family: var(--sans);
+}
+
+[data-theme="retro"] .strip-ident::before {
+    content: "";
+    width: 0.85rem;
+    height: 0.85rem;
+    background: var(--phase);
+    mask: var(--starburst) center / contain no-repeat;
+}
+
+[data-theme="retro"] .callsign {
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+}
+
+[data-theme="retro"] .type-code,
+[data-theme="retro"] .registration {
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+}
+
+[data-theme="retro"] .route {
+    margin-top: 0.15rem;
+    font-family: var(--sans);
+    font-size: 1.05rem;
+    font-weight: 400;
+    font-stretch: normal;
+}
+
+[data-theme="retro"] .boxes {
+    gap: 0.5rem 1.6rem;
+    margin-top: 0.7rem;
+    border-top: 0;
+}
+
+[data-theme="retro"] .box {
+    margin: 0;
+    padding: 0;
+    border-right: 0;
+}
+
+[data-theme="retro"] .box dt {
+    color: var(--ink-soft);
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+}
+
+[data-theme="retro"] .box dd {
+    font: 600 0.98rem/1.4 var(--sans);
+    font-variant-numeric: tabular-nums;
+}
+
+[data-theme="retro"] .box small,
+[data-theme="retro"] .box s {
+    color: var(--ink-soft);
+    font-weight: 400;
+}
+
+[data-theme="retro"] .box.delayed dd {
+    color: #c75f62;
+}
+
+[data-theme="retro"] .operator {
+    display: none;
+}
+
+[data-theme="retro"] .empty {
+    border: 0;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--mint) 35%, var(--paper));
+    color: var(--ink);
+}
+
+@media (max-width: 56rem) {
+    [data-theme="retro"] .layout {
+        gap: 0;
+        padding: 0 1.2rem;
+    }
+
+    [data-theme="retro"] .chart {
+        padding-top: 2.5rem;
+    }
+
+    [data-theme="retro"] .place-code {
+        font-size: 4.8rem;
+    }
+
+    [data-theme="retro"] .bay {
+        padding-top: 0;
+    }
+
+    [data-theme="retro"] .strip {
+        padding-left: 0;
     }
 }

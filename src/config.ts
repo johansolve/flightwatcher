@@ -23,5 +23,8 @@ export const config = {
         '/vendor/plex-mono/': new URL('@fontsource/ibm-plex-mono/', modules),
         '/vendor/alegreya/': new URL('@fontsource-variable/alegreya/', modules),
         '/vendor/im-fell/': new URL('@fontsource/im-fell-english-sc/', modules),
+        '/vendor/jost/': new URL('@fontsource-variable/jost/', modules),
+        '/vendor/josefin/': new URL('@fontsource-variable/josefin-sans/', modules),
+        '/vendor/yellowtail/': new URL('@fontsource/yellowtail/', modules),
     } as Record<string, URL>,
 };

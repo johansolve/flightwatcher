@@ -9,13 +9,13 @@ export class HttpError extends Error {
     }
 }
 
-/** GET JSON with timeout. Returns null on 404, throws on other failures. */
+/** GET JSON with timeout. Returns null on 404 and 204 (no content), throws on other failures. */
 export async function getJson<T>(url: string, headers: Record<string, string> = {}, timeoutMs = 6000): Promise<T | null> {
     const res = await fetch(url, {
         headers: { 'User-Agent': config.userAgent, Accept: 'application/json', ...headers },
         signal: AbortSignal.timeout(timeoutMs),
     });
-    if (res.status === 404) {
+    if (res.status === 404 || res.status === 204) {
         return null;
     }
     if (!res.ok) {
