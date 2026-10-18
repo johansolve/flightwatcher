@@ -1,0 +1,9 @@
+{
+    "esversion": 11,
+    "module": true,
+    "browser": true,
+    "curly": true,
+    "eqeqeq": true,
+    "undef": true,
+    "unused": true
+}

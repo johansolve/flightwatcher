@@ -1,0 +1,1027 @@
+:root {
+    --bay: #2e3a47;
+    --bay-light: #3a4856;
+    --paper: #f3f4ee;
+    --stamp: #fffefa;
+    --ink: #1c2733;
+    --ink-soft: #5b6672;
+    --on-bay: #e6e9e3;
+    --on-bay-soft: #a7b1ba;
+    --climb: #3e8e5a;
+    --descend: #d99a1e;
+    --cruise: #3f74ad;
+    --ground: #8c9298;
+    --display: "Archivo Variable", "Arial Narrow", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+    color-scheme: light;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bay);
+    color: var(--on-bay);
+    font: 400 15px/1.45 var(--display);
+}
+
+a {
+    color: inherit;
+}
+
+:focus-visible {
+    outline: 2px solid var(--descend);
+    outline-offset: 2px;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: minmax(18rem, 25rem) minmax(0, 1fr);
+    gap: 2.5rem;
+    max-width: 90rem;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Left column: place, map, controls */
+
+.chart {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    height: 100vh;
+    padding: 2rem 0;
+    overflow-y: auto;
+}
+
+.place {
+    position: relative;
+}
+
+.place-code {
+    display: block;
+    font-size: 7.5rem;
+    font-weight: 800;
+    font-stretch: 62%;
+    line-height: 0.82;
+    letter-spacing: -0.01em;
+    color: var(--paper);
+}
+
+.place-code::after {
+    content: "";
+    display: inline-block;
+    width: 0.16em;
+    height: 0.16em;
+    margin-left: 0.12em;
+    border-right: 0.045em solid var(--on-bay-soft);
+    border-bottom: 0.045em solid var(--on-bay-soft);
+    transform: translateY(-0.28em) rotate(45deg);
+}
+
+.place-name {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 1.15rem;
+    font-weight: 500;
+    font-stretch: 85%;
+}
+
+.place-select {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.place:focus-within {
+    outline: 2px solid var(--descend);
+    outline-offset: 6px;
+}
+
+.status {
+    margin: 0;
+    color: var(--on-bay-soft);
+    font-size: 0.9rem;
+}
+
+.places {
+    color: var(--on-bay-soft);
+    font-size: 0.9rem;
+}
+
+.places summary {
+    cursor: pointer;
+}
+
+.places-list {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0.6rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.places-list li {
+    display: grid;
+    grid-template-columns: 3.2rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.places-code {
+    color: var(--on-bay);
+    font-family: var(--mono);
+}
+
+.places-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.places-list button {
+    padding: 0 0.35rem;
+    border: 0;
+    background: none;
+    color: inherit;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.places-list button:hover {
+    color: var(--descend);
+}
+
+.places-add {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+}
+
+.places-add input,
+.places-add button {
+    padding: 0.25rem 0.55rem;
+    border: 1px solid var(--on-bay-soft);
+    color: var(--on-bay);
+    font: inherit;
+}
+
+.places-add input {
+    width: 8.5rem;
+    background: var(--bay-light);
+    font-family: var(--mono);
+    text-transform: uppercase;
+}
+
+.places-add input::placeholder {
+    text-transform: none;
+}
+
+.places-add button {
+    background: transparent;
+    cursor: pointer;
+}
+
+.places-msg {
+    min-height: 1.2em;
+    margin: 0.4rem 0 0;
+    font-size: 0.82rem;
+}
+
+.map-frame {
+    border: 1px solid var(--on-bay-soft);
+}
+
+.map {
+    aspect-ratio: 1;
+    background: #1d2329;
+}
+
+.radius {
+    display: grid;
+    gap: 0.3rem;
+    color: var(--on-bay-soft);
+    font-size: 0.9rem;
+}
+
+.radius output {
+    color: var(--on-bay);
+    font-family: var(--mono);
+}
+
+.radius input {
+    width: 100%;
+    accent-color: var(--descend);
+}
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.85rem;
+    color: var(--on-bay-soft);
+}
+
+.legend li::before {
+    content: "";
+    display: inline-block;
+    width: 0.7rem;
+    height: 0.7rem;
+    margin-right: 0.35rem;
+    vertical-align: -0.05rem;
+    background: var(--phase);
+}
+
+.theme {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    color: var(--on-bay-soft);
+    font-size: 0.9rem;
+}
+
+.theme select {
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--on-bay-soft);
+    background: var(--bay-light);
+    color: var(--on-bay);
+    font: inherit;
+}
+
+.credits {
+    margin: auto 0 0;
+    color: var(--on-bay-soft);
+    font-size: 0.75rem;
+    line-height: 1.5;
+}
+
+/* Phase colours, shared by legend, strips and map markers */
+
+.climb,
+[data-phase="climb"] {
+    --phase: var(--climb);
+}
+
+.descend,
+[data-phase="descend"] {
+    --phase: var(--descend);
+}
+
+.cruise,
+[data-phase="cruise"] {
+    --phase: var(--cruise);
+}
+
+.ground,
+[data-phase="ground"] {
+    --phase: var(--ground);
+}
+
+/* Map */
+
+.leaflet-container {
+    font-family: var(--display);
+}
+
+.leaflet-control-attribution.leaflet-control {
+    font-size: 9px;
+    background: rgb(46 58 71 / 0.85);
+    color: var(--on-bay-soft);
+}
+
+.leaflet-control-attribution a {
+    color: var(--on-bay);
+}
+
+.range-ring {
+    fill: none;
+    stroke: var(--on-bay);
+    stroke-width: 1;
+    stroke-opacity: 0.55;
+}
+
+.range-ring-inner {
+    stroke-opacity: 0.3;
+}
+
+.centre-mark {
+    fill: var(--bay);
+    fill-opacity: 1;
+    stroke: var(--on-bay);
+    stroke-width: 1.5;
+}
+
+.plane-icon {
+    overflow: visible;
+}
+
+.plane {
+    position: relative;
+}
+
+.plane-glyph {
+    position: absolute;
+    top: -11px;
+    left: -11px;
+    width: 22px;
+    height: 22px;
+    fill: var(--phase);
+    stroke: #11161b;
+    stroke-width: 1.8;
+    stroke-linejoin: round;
+    paint-order: stroke fill;
+    transform: rotate(var(--track, 0deg)) scale(calc(var(--kind-scale, 1) * var(--state-scale, 1)));
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.plane-label {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    padding: 0 3px;
+    border-left: 2px solid var(--phase);
+    background: rgb(29 35 41 / 0.85);
+    color: var(--on-bay);
+    font: 600 10px/1.4 var(--mono);
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.plane-label:empty {
+    display: none;
+}
+
+/* Figure numbers and prose belong to the wall-chart theme */
+.plane-no,
+.fig-no,
+.prose {
+    display: none;
+}
+
+/* Light aircraft are drawn smaller than airliners */
+.plane[data-kind="ga"] {
+    --kind-scale: 0.8;
+}
+
+.plane[data-kind="heli"] {
+    --kind-scale: 0.9;
+}
+
+.plane[data-phase="ground"] {
+    --state-scale: 0.7;
+}
+
+.selected .plane {
+    --state-scale: 1.45;
+}
+
+.selected .plane-label {
+    background: var(--paper);
+    color: var(--ink);
+}
+
+/* Strip bay */
+
+.bay {
+    padding: 2rem 0 3rem;
+}
+
+.strips {
+    position: relative;
+    display: grid;
+    gap: 6px;
+    max-width: 54rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.strip {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    padding: 0.85rem 1rem 0.85rem 1.6rem;
+    background:
+        linear-gradient(to right, var(--phase) 0 0.7rem, transparent 0.7rem),
+        var(--paper);
+    color: var(--ink);
+    box-shadow: 0 1px 0 rgb(0 0 0 / 0.25), 0 2px 6px rgb(0 0 0 / 0.2);
+    cursor: pointer;
+    transition: transform 0.18s ease-out;
+}
+
+.strip.selected {
+    transform: translateX(-0.9rem);
+    box-shadow: 0 1px 0 rgb(0 0 0 / 0.25), 0 8px 22px rgb(0 0 0 / 0.4);
+}
+
+.strip-ident {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 0.9rem;
+    align-items: baseline;
+    font-family: var(--mono);
+}
+
+.callsign {
+    font-size: 1.55rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.type-code,
+.registration {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+}
+
+.route {
+    margin: 0.15rem 0 0;
+    font-size: 1.2rem;
+    font-weight: 650;
+    font-stretch: 75%;
+}
+
+.route:empty {
+    display: none;
+}
+
+.boxes {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0.65rem 0 0;
+    border-top: 1px solid rgb(28 39 51 / 0.25);
+}
+
+.box {
+    padding: 0.4rem 0.9rem 0 0;
+    margin-right: 0.9rem;
+    border-right: 1px solid rgb(28 39 51 / 0.25);
+}
+
+.box:last-child {
+    border-right: 0;
+}
+
+.box[hidden] {
+    display: none;
+}
+
+.box dt {
+    color: var(--ink-soft);
+    font-size: 0.78rem;
+}
+
+.box dd {
+    margin: 0;
+    font: 600 0.95rem/1.35 var(--mono);
+    white-space: nowrap;
+}
+
+.box small {
+    color: var(--ink-soft);
+    font-weight: 400;
+    font-size: 0.78rem;
+}
+
+.box s {
+    color: var(--ink-soft);
+    font-weight: 400;
+}
+
+.box.delayed dd {
+    color: #a3361f;
+}
+
+.operator {
+    margin: 0.55rem 0 0;
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+}
+
+/* Photo as a perforated stamp */
+
+/* Always rendered so the layout does not jump when a photo loads or is missing */
+.stamp {
+    width: 9.5rem;
+    margin: 0;
+}
+
+.stamp-link {
+    display: block;
+    filter: drop-shadow(0 1px 1.5px rgb(0 0 0 / 0.35));
+}
+
+.stamp-paper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 3 / 2;
+    padding: 7px;
+    background: var(--stamp);
+    mask:
+        radial-gradient(circle, transparent 2.4px, #000 2.9px) -4px -4px / 8px 8px round,
+        linear-gradient(#000 0 0) center / calc(100% - 10px) calc(100% - 10px) no-repeat;
+}
+
+.sketch {
+    width: 38%;
+    fill: var(--ink-soft);
+    opacity: 0.35;
+}
+
+/* Point every fallback icon left, like most spotter photos.
+   Jet and helicopter icons face right; the propeller icon is top-down, nose up. */
+.strip[data-kind="jet"] .sketch,
+.strip[data-kind="heli"] .sketch {
+    transform: scaleX(-1);
+}
+
+.strip[data-kind="prop"] .sketch,
+.strip[data-kind="ga"] .sketch {
+    transform: rotate(-90deg);
+}
+
+.has-photo .sketch {
+    display: none;
+}
+
+/* Keep the photographer's framing, centred in the reserved box */
+.stamp img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.stamp-type {
+    display: none;
+}
+
+.stamp-credit {
+    margin-top: 0.3rem;
+    color: var(--ink-soft);
+    font-size: 0.68rem;
+    line-height: 1.3;
+}
+
+.empty {
+    max-width: 54rem;
+    margin: 0;
+    padding: 1.2rem 1.4rem;
+    border: 1px dashed var(--on-bay-soft);
+    color: var(--on-bay-soft);
+}
+
+@media (max-width: 56rem) {
+    .layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+        padding: 0 1rem;
+    }
+
+    .chart {
+        position: static;
+        height: auto;
+        padding-bottom: 1.5rem;
+    }
+
+    .place-code {
+        font-size: 5.5rem;
+    }
+
+    .map {
+        aspect-ratio: 4 / 3;
+    }
+
+    .credits {
+        order: 10;
+    }
+
+    .bay {
+        padding-top: 0;
+    }
+
+    .stamp {
+        width: 6.5rem;
+    }
+
+    .strip {
+        padding-left: 1.3rem;
+    }
+
+    .strip.selected {
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .strip,
+    .plane-glyph {
+        transition: none;
+    }
+}
+
+/* ===== Theme: Skolplansch (old school wall chart) ===== */
+
+[data-theme="plansch"] {
+    --wall: #8a968a;
+    --sheet: #e9dfc6;
+    --ink: #2a2621;
+    --ink-soft: #6b6152;
+    --climb: #4b6b4f;
+    --descend: #b5562f;
+    --cruise: #3d5a78;
+    --ground: #8a8172;
+    --wood: #6b4a2e;
+    --wood-dark: #3e2a19;
+    --display: "IM Fell English SC", Georgia, serif;
+    --text: "Alegreya Variable", Georgia, serif;
+}
+
+[data-theme="plansch"] body {
+    position: relative;
+    padding: 4.5rem 0 4rem;
+    background: linear-gradient(to bottom, #96a295, var(--wall) 40%, #7d897d);
+    color: var(--ink);
+    font: 400 16px/1.5 var(--text);
+}
+
+/* Hanging cord and nail above the sheet (positioned against .layout) */
+[data-theme="plansch"] .bay::before {
+    content: "";
+    position: absolute;
+    top: -4rem;
+    left: 50%;
+    width: 18rem;
+    height: 3.2rem;
+    transform: translateX(-50%);
+    background:
+        radial-gradient(circle at 50% 4px, #2b2219 3px, transparent 3.5px),
+        linear-gradient(to top left, transparent calc(50% - 1px), #3a2d20 50%, transparent calc(50% + 1px)) left / 50% 100% no-repeat,
+        linear-gradient(to top right, transparent calc(50% - 1px), #3a2d20 50%, transparent calc(50% + 1px)) right / 50% 100% no-repeat;
+}
+
+[data-theme="plansch"] .layout {
+    position: relative;
+    max-width: 82rem;
+    min-height: auto;
+    margin: 0 auto;
+    padding: 3rem 3.5rem 3.5rem;
+    gap: 3rem;
+    background:
+        radial-gradient(ellipse at 25% 15%, #f1e9d4, transparent 60%),
+        radial-gradient(ellipse at 85% 95%, #d8c9a6, transparent 55%),
+        var(--sheet);
+    box-shadow: 0 18px 40px rgb(0 0 0 / 0.35);
+}
+
+/* Wooden rods top and bottom */
+[data-theme="plansch"] .layout::before,
+[data-theme="plansch"] .layout::after {
+    content: "";
+    position: absolute;
+    left: -1.2rem;
+    right: -1.2rem;
+    height: 1.5rem;
+    border-radius: 0.75rem;
+    background: linear-gradient(to bottom, #8a6440, var(--wood) 45%, var(--wood-dark));
+    box-shadow: 0 3px 6px rgb(0 0 0 / 0.35);
+}
+
+[data-theme="plansch"] .layout::before {
+    top: -0.9rem;
+}
+
+[data-theme="plansch"] .layout::after {
+    bottom: -0.9rem;
+}
+
+[data-theme="plansch"] :focus-visible,
+[data-theme="plansch"] .place:focus-within {
+    outline-color: var(--descend);
+}
+
+[data-theme="plansch"] .chart {
+    position: static;
+    height: auto;
+    padding: 0;
+    overflow: visible;
+}
+
+[data-theme="plansch"] .place-code {
+    color: var(--ink);
+    font-family: var(--display);
+    font-size: 5.5rem;
+    font-weight: 400;
+    font-stretch: normal;
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+}
+
+[data-theme="plansch"] .place-code::after {
+    border-color: var(--ink-soft);
+}
+
+[data-theme="plansch"] .place-name {
+    font-family: var(--text);
+    font-size: 1.35rem;
+    font-style: italic;
+    font-stretch: normal;
+}
+
+[data-theme="plansch"] .status,
+[data-theme="plansch"] .radius,
+[data-theme="plansch"] .legend,
+[data-theme="plansch"] .theme,
+[data-theme="plansch"] .credits {
+    color: var(--ink-soft);
+}
+
+[data-theme="plansch"] .status {
+    font-style: italic;
+}
+
+[data-theme="plansch"] .map-frame {
+    margin: 5px;
+    padding: 0;
+    border: 1px solid var(--ink);
+    outline: 1px solid var(--ink);
+    outline-offset: 4px;
+    background: none;
+    box-shadow: none;
+}
+
+[data-theme="plansch"] .leaflet-tile-pane {
+    filter: sepia(0.55) saturate(0.8) contrast(0.95);
+}
+
+[data-theme="plansch"] .leaflet-control-attribution.leaflet-control {
+    background: rgb(233 223 198 / 0.85);
+    color: var(--ink-soft);
+}
+
+[data-theme="plansch"] .leaflet-control-attribution a {
+    color: var(--cruise);
+}
+
+[data-theme="plansch"] .map {
+    background: #e2dcc8;
+}
+
+[data-theme="plansch"] .range-ring {
+    stroke: var(--ink);
+    stroke-width: 1.5;
+    stroke-dasharray: 3 6;
+    stroke-opacity: 0.7;
+}
+
+[data-theme="plansch"] .range-ring-inner {
+    display: none;
+}
+
+[data-theme="plansch"] .plane-glyph {
+    stroke: var(--ink);
+}
+
+[data-theme="plansch"] .centre-mark {
+    fill: var(--sheet);
+    stroke: var(--ink);
+    stroke-width: 2;
+}
+
+[data-theme="plansch"] .radius output {
+    color: var(--ink);
+    font-family: var(--text);
+}
+
+[data-theme="plansch"] .legend li::before {
+    border-radius: 50%;
+}
+
+[data-theme="plansch"] .places {
+    color: var(--ink-soft);
+}
+
+[data-theme="plansch"] .places summary {
+    font-style: italic;
+}
+
+[data-theme="plansch"] .places-code {
+    color: var(--ink);
+    font-family: var(--display);
+}
+
+[data-theme="plansch"] .places-add input,
+[data-theme="plansch"] .places-add button {
+    border-color: var(--ink-soft);
+    background: transparent;
+    color: var(--ink);
+    font-family: var(--text);
+}
+
+[data-theme="plansch"] .theme select {
+    border-color: var(--ink-soft);
+    background: transparent;
+    color: var(--ink);
+}
+
+/* Map key: numbered markers instead of callsigns */
+
+[data-theme="plansch"] .plane-label {
+    display: none;
+}
+
+[data-theme="plansch"] .plane-no {
+    display: block;
+    position: absolute;
+    top: 5px;
+    left: 8px;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 3px;
+    border: 1px solid var(--ink);
+    border-radius: 9px;
+    background: var(--sheet);
+    color: var(--ink);
+    font: 600 10px/15px var(--text);
+    text-align: center;
+    pointer-events: none;
+}
+
+[data-theme="plansch"] .selected .plane-no {
+    background: var(--ink);
+    color: var(--sheet);
+}
+
+/* Aircraft as numbered figures */
+
+[data-theme="plansch"] .bay {
+    padding: 0;
+}
+
+[data-theme="plansch"] .strips {
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 2.8rem 3rem;
+    align-items: start;
+    max-width: none;
+}
+
+[data-theme="plansch"] .strip {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    text-align: center;
+    transition: none;
+}
+
+[data-theme="plansch"] .strip.selected {
+    transform: none;
+    box-shadow: none;
+}
+
+[data-theme="plansch"] .stamp {
+    width: 100%;
+}
+
+[data-theme="plansch"] .stamp-link {
+    filter: none;
+}
+
+[data-theme="plansch"] .stamp-paper {
+    padding: 0;
+    background: none;
+    mask: none;
+}
+
+/* Feathered, slightly irregular superellipse generated per aircraft in app.js */
+[data-theme="plansch"] .stamp img {
+    mask: var(--blob, none) center / 100% 100% no-repeat;
+}
+
+[data-theme="plansch"] .stamp-credit {
+    display: grid;
+    margin-top: 0;
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
+[data-theme="plansch"] .stamp-type {
+    display: block;
+}
+
+[data-theme="plansch"] .strip-ident {
+    justify-content: center;
+    gap: 0.1rem 0.6rem;
+    font-family: var(--text);
+}
+
+[data-theme="plansch"] .fig-no {
+    display: inline;
+    color: var(--ink-soft);
+    font-family: var(--display);
+    font-size: 1.05rem;
+}
+
+[data-theme="plansch"] .fig-no::before {
+    content: "";
+    display: inline-block;
+    width: 0.55rem;
+    height: 0.55rem;
+    margin-right: 0.4rem;
+    border-radius: 50%;
+    background: var(--phase);
+}
+
+[data-theme="plansch"] .strip.selected .fig-no {
+    color: var(--descend);
+}
+
+[data-theme="plansch"] .callsign {
+    font-family: var(--display);
+    font-size: 1.45rem;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+}
+
+[data-theme="plansch"] .type-code,
+[data-theme="plansch"] .registration {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    font-style: italic;
+}
+
+[data-theme="plansch"] .route {
+    margin-top: 0;
+    font-family: var(--text);
+    font-size: 1.1rem;
+    font-style: italic;
+    font-weight: 500;
+    font-stretch: normal;
+}
+
+[data-theme="plansch"] .boxes {
+    display: none;
+}
+
+[data-theme="plansch"] .prose {
+    display: block;
+    margin: 0.45rem 0 0;
+    font-size: 1rem;
+    line-height: 1.55;
+    font-variant-numeric: oldstyle-nums;
+    text-wrap: pretty;
+    hyphens: auto;
+}
+
+/* Airline sits in the caption under the photo instead */
+[data-theme="plansch"] .operator {
+    display: none;
+}
+
+[data-theme="plansch"] .empty {
+    border: 1px solid var(--ink-soft);
+    color: var(--ink-soft);
+    font-style: italic;
+}
+
+@media (max-width: 56rem) {
+    [data-theme="plansch"] .bay::before {
+        width: 11rem;
+    }
+
+    [data-theme="plansch"] body {
+        padding-bottom: 3rem;
+    }
+
+    [data-theme="plansch"] .layout {
+        margin: 0 0.9rem;
+        padding: 2.2rem 1.25rem 2.5rem;
+        gap: 2rem;
+    }
+
+    [data-theme="plansch"] .layout::before,
+    [data-theme="plansch"] .layout::after {
+        left: -0.6rem;
+        right: -0.6rem;
+    }
+
+    [data-theme="plansch"] .place-code {
+        font-size: 4.5rem;
+    }
+}

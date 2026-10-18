@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="sv">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flightwatcher</title>
+    <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+    <link rel="stylesheet" href="vendor/archivo/wdth.css">
+    <link rel="stylesheet" href="vendor/plex-mono/400.css">
+    <link rel="stylesheet" href="vendor/plex-mono/600.css">
+    <link rel="stylesheet" href="vendor/alegreya/wght.css">
+    <link rel="stylesheet" href="vendor/alegreya/wght-italic.css">
+    <link rel="stylesheet" href="vendor/im-fell/400.css">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="app.js"></script>
+</head>
+<body>
+    <div class="layout">
+        <aside class="chart">
+            <div class="place">
+                <span class="place-code" id="place-code" aria-hidden="true">AGH</span>
+                <select id="location" class="place-select" aria-label="Plats"></select>
+                <span class="place-name" id="place-name"></span>
+            </div>
+            <p class="status" id="status">Hämtar plats …</p>
+
+            <details class="places">
+                <summary>Ändra flygplatser</summary>
+                <ul class="places-list" id="places-list"></ul>
+                <form class="places-add" id="places-add">
+                    <input id="places-code" maxlength="4" autocomplete="off" spellcheck="false" placeholder="Kod, t.ex. MMX" aria-label="IATA- eller ICAO-kod">
+                    <button type="submit">Lägg till</button>
+                </form>
+                <p class="places-msg" id="places-msg" aria-live="polite"></p>
+            </details>
+
+            <div class="map-frame">
+                <div id="map" class="map"></div>
+            </div>
+
+            <label class="radius">
+                <span>Radie <output id="radius-value">10</output> km</span>
+                <input type="range" id="radius" min="1" max="50" step="1" value="10">
+            </label>
+
+            <ul class="legend">
+                <li class="climb">Stiger</li>
+                <li class="descend">Sjunker</li>
+                <li class="cruise">Planflykt</li>
+                <li class="ground">På marken</li>
+            </ul>
+
+            <label class="theme">
+                <span>Tema</span>
+                <select id="theme">
+                    <option value="atc">Flygledare</option>
+                    <option value="plansch">Skolplansch</option>
+                </select>
+            </label>
+
+            <p class="credits">
+                Positioner från <a href="https://adsb.lol">adsb.lol</a> och <a href="https://adsb.fi">adsb.fi</a> (ODbL),
+                rutter från <a href="https://www.adsbdb.com">adsbdb</a>,
+                tider från <a href="https://www.flightaware.com/commercial/aeroapi/">FlightAware</a>,
+                foton från <a href="https://www.planespotters.net">Planespotters.net</a>.
+            </p>
+        </aside>
+
+        <main class="bay">
+            <p class="empty" id="empty" hidden></p>
+            <ol class="strips" id="strips"></ol>
+        </main>
+    </div>
+
+    <template id="strip-template">
+        <li class="strip" tabindex="0">
+            <div class="strip-text">
+                <div class="strip-ident">
+                    <span class="fig-no" data-field="figure"></span>
+                    <span class="callsign" data-field="callsign"></span>
+                    <span class="type-code" data-field="typeCode"></span>
+                    <span class="registration" data-field="registration"></span>
+                </div>
+                <p class="route" data-field="route"></p>
+                <dl class="boxes">
+                    <div class="box">
+                        <dt>Höjd</dt>
+                        <dd><span data-field="altitude"></span> <small data-field="altitudeFt"></small></dd>
+                    </div>
+                    <div class="box">
+                        <dt>Fart</dt>
+                        <dd><span data-field="speed"></span> <small data-field="speedKt"></small></dd>
+                    </div>
+                    <div class="box">
+                        <dt>Avstånd</dt>
+                        <dd data-field="distance"></dd>
+                    </div>
+                    <div class="box" data-row="departure">
+                        <dt>Avgång</dt>
+                        <dd data-field="departure"></dd>
+                    </div>
+                    <div class="box" data-row="arrival">
+                        <dt>Ankomst</dt>
+                        <dd data-field="arrival"></dd>
+                    </div>
+                </dl>
+                <p class="prose" data-field="prose"></p>
+                <p class="operator"><span data-field="airline"></span><span class="operator-type" data-field="typeSuffix"></span></p>
+            </div>
+            <figure class="stamp">
+                <a class="stamp-link" target="_blank" rel="noopener">
+                    <span class="stamp-paper"><svg class="sketch" viewBox="0 0 15 15" aria-hidden="true"><path/></svg><img alt="" hidden></span>
+                </a>
+                <figcaption class="stamp-credit">
+                    <span class="stamp-type" data-field="typeName"></span>
+                    <span class="stamp-credit-text"></span>
+                </figcaption>
+            </figure>
+        </li>
+    </template>
+</body>
+</html>
