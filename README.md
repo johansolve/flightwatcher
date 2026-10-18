@@ -12,11 +12,12 @@ It is a small, self-hosted web page meant for a home screen, a wall display or j
 - **Route and times**: origin and destination, scheduled, estimated and actual departure and arrival, with delays highlighted.
 - **Photos** of the actual airframe from Planespotters.net, credited to the photographer. When no photo exists, an icon for the aircraft type is shown instead, so the layout stays stable.
 - **Editable airport list**: add or remove airports by IATA or ICAO code directly in the page (for example `MMX` or `ESMS`). The list is stored per browser.
-- **Four themes**, switchable from a dropdown:
+- **Five themes**, switchable from a dropdown:
   - *Flygledare* (air traffic control): a dark strip bay with flight progress strips colour-coded by phase of flight, photos as perforated stamps and a radar-style map.
   - *Skolplansch* (school wall chart): an aged paper chart hanging from wooden rods, with numbered figures, facts written as prose, softly vignetted photos and a watercolour map.
   - *Tavelvägg* (gallery wall): every aircraft as a framed print with a white mat, alternating black and oak frames, on a muted wall.
   - *Retro*: a very clean 1950s look with pastel accents, atomic starbursts and rounded photos.
+  - *Minimal*: plain and airy, one aircraft per row with photo and facts alternating left and right.
 - Light on resources: no build step, no framework, a single Node process with an SQLite cache.
 
 ## Requirements
@@ -82,7 +83,7 @@ Flightwatcher relies on free services run by others. Please respect their terms 
 | Aircraft and routes | [adsbdb](https://www.adsbdb.com) | Free API |
 | Departure and arrival times | [FlightAware AeroAPI](https://www.flightaware.com/commercial/aeroapi/) | Personal tier is for personal or academic use only |
 | Photos | [Planespotters.net](https://www.planespotters.net/photo/api) | Photographer credit and link required; images may not be stored, proxied or used for AI training |
-| Map tiles | [Stadia Maps](https://stadiamaps.com) (Alidade Smooth Dark, Stamen Watercolor), © OpenMapTiles, © OpenStreetMap contributors | Free without an account on localhost; a (free) account is needed for a public domain |
+| Map tiles | [Stadia Maps](https://stadiamaps.com) (Alidade Smooth, Alidade Smooth Dark, Stamen Watercolor, Stamen Toner Lite), © OpenMapTiles, © OpenStreetMap contributors | Free without an account on localhost; a (free) account is needed for a public domain |
 | Airports | [OurAirports](https://ourairports.com/data/) | Public domain |
 | Aircraft types | ICAO Doc 8643 designators via [tar1090-db](https://github.com/wiedehopf/tar1090-db) | Factual reference data |
 | Wind at airports | [NOAA aviationweather.gov](https://aviationweather.gov/data/api/) METAR | US government data, free |

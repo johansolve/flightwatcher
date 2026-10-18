@@ -83,6 +83,10 @@ const BASEMAPS = {
         maxZoom: 16,
         attribution: TILE_ATTRIBUTION,
     }),
+    minimal: L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png', {
+        maxZoom: 16,
+        attribution: STAMEN_ATTRIBUTION,
+    }),
     plansch: L.layerGroup([
         L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg', {
             maxZoom: 16,
@@ -425,14 +429,18 @@ function updateMarker(marker, f, figure) {
     el.querySelector('.plane-label').textContent = f.onGround ? '' : f.callsign || f.registration || '';
 }
 
+const STRIP_PARTS = ['.stamp', '.strip-text'];
+
 function layoutSnapshot() {
     const rects = new Map();
+    const parts = new Map();
     for (const el of els.strips.children) {
         if (!el.classList.contains('leaving')) {
             rects.set(el, el.getBoundingClientRect());
+            parts.set(el, STRIP_PARTS.map((sel) => el.querySelector(sel).getBoundingClientRect()));
         }
     }
-    return { rects, host: els.strips.getBoundingClientRect() };
+    return { rects, parts, host: els.strips.getBoundingClientRect() };
 }
 
 /** FLIP: slide moved strips from their old position, fade new ones in and leaving ones out in place. */
@@ -464,6 +472,9 @@ function animateLayout(before, added, leaving) {
             continue;
         }
         const after = el.getBoundingClientRect();
+        // Measure before any transform is applied to the strip itself
+        const parts = STRIP_PARTS.map((sel) => el.querySelector(sel));
+        const partRects = parts.map((part) => part.getBoundingClientRect());
         const dx = r.left - after.left;
         const dy = r.top - after.top;
         if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
@@ -472,6 +483,21 @@ function animateLayout(before, added, leaving) {
                 easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)',
                 composite: 'add',
             });
+        }
+        // Photo and text swapping sides within the strip (alternating rows)
+        const partsBefore = before.parts.get(el);
+        for (const [i, part] of parts.entries()) {
+            const was = partsBefore[i];
+            const now = partRects[i];
+            const px = (was.left - r.left) - (now.left - after.left);
+            const py = (was.top - r.top) - (now.top - after.top);
+            if (Math.abs(px) > 1 || Math.abs(py) > 1) {
+                part.animate([{ transform: `translate(${px}px, ${py}px)` }, { transform: 'translate(0, 0)' }], {
+                    duration: 600,
+                    easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)',
+                    composite: 'add',
+                });
+            }
         }
     }
     for (const el of added) {
@@ -504,6 +530,8 @@ function render(flights) {
         setField(item.strip, 'figure', `Fig. ${index + 1}`);
         updateMarker(item.marker, f, index + 1);
         item.strip.classList.toggle('selected', f.hex === state.selected);
+        // Alternating rows; set here so leaving strips keep their side while fading out
+        item.strip.classList.toggle('alt', index % 2 === 1);
         els.strips.appendChild(item.strip);
     }
     const leaving = [];

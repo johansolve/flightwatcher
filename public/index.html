@@ -32,16 +32,6 @@
                 <small class="wind-source"></small>
             </p>
 
-            <details class="places">
-                <summary>Ändra flygplatser</summary>
-                <ul class="places-list" id="places-list"></ul>
-                <form class="places-add" id="places-add">
-                    <input id="places-code" maxlength="4" autocomplete="off" spellcheck="false" placeholder="Kod, t.ex. MMX" aria-label="IATA- eller ICAO-kod">
-                    <button type="submit">Lägg till</button>
-                </form>
-                <p class="places-msg" id="places-msg" aria-live="polite"></p>
-            </details>
-
             <div class="map-frame">
                 <div id="map" class="map"></div>
             </div>
@@ -58,6 +48,16 @@
                 <li class="ground">På marken</li>
             </ul>
 
+            <details class="places">
+                <summary>Ändra flygplatser</summary>
+                <ul class="places-list" id="places-list"></ul>
+                <form class="places-add" id="places-add">
+                    <input id="places-code" maxlength="4" autocomplete="off" spellcheck="false" placeholder="Kod, t.ex. MMX" aria-label="IATA- eller ICAO-kod">
+                    <button type="submit">Lägg till</button>
+                </form>
+                <p class="places-msg" id="places-msg" aria-live="polite"></p>
+            </details>
+
             <label class="theme">
                 <span>Tema</span>
                 <select id="theme">
@@ -65,6 +65,7 @@
                     <option value="plansch">Skolplansch</option>
                     <option value="galleri">Tavelvägg</option>
                     <option value="retro">Retro</option>
+                    <option value="minimal">Minimal</option>
                 </select>
             </label>
 

@@ -1709,3 +1709,343 @@ a {
         padding-left: 0;
     }
 }
+
+/* ===== Theme: Minimal (plain, one aircraft per row, alternating sides) ===== */
+
+[data-theme="minimal"] {
+    --page: #fafaf8;
+    --ink: #1d1d1b;
+    --ink-soft: #85847f;
+    --line: #e4e3df;
+    --on-bay: var(--ink);
+    --on-bay-soft: var(--ink-soft);
+    --bay-light: #fff;
+    --paper: var(--ink);
+    --climb: #5d9a6c;
+    --descend: #d08a4e;
+    --cruise: #5b86b0;
+    --ground: #a6a59f;
+    --sans: "Jost Variable", Futura, "Century Gothic", sans-serif;
+}
+
+[data-theme="minimal"] body {
+    background: var(--page);
+    color: var(--ink);
+    font: 400 15px/1.5 var(--sans);
+}
+
+[data-theme="minimal"] :focus-visible,
+[data-theme="minimal"] .place:focus-within {
+    outline-color: var(--ink);
+}
+
+[data-theme="minimal"] .layout {
+    gap: 5rem;
+    padding: 0 3rem;
+}
+
+[data-theme="minimal"] .chart {
+    gap: 1.2rem;
+    padding: 3.5rem 0 2rem;
+}
+
+[data-theme="minimal"] .place-code {
+    font-family: var(--sans);
+    font-size: 5.5rem;
+    font-weight: 300;
+    font-stretch: normal;
+    line-height: 0.9;
+    letter-spacing: 0.06em;
+}
+
+[data-theme="minimal"] .place-code::after {
+    border-width: 0.02em;
+}
+
+[data-theme="minimal"] .place-name {
+    margin-top: 0.6rem;
+    color: var(--ink-soft);
+    font-family: var(--sans);
+    font-size: 1.1rem;
+    font-weight: 400;
+    font-stretch: normal;
+}
+
+[data-theme="minimal"] .places-code,
+[data-theme="minimal"] .places-add input,
+[data-theme="minimal"] .radius output {
+    font-family: var(--sans);
+}
+
+[data-theme="minimal"] .places-add input,
+[data-theme="minimal"] .places-add button,
+[data-theme="minimal"] .theme select {
+    border-color: var(--line);
+}
+
+[data-theme="minimal"] .places-list button:hover {
+    color: var(--ink);
+}
+
+[data-theme="minimal"] .radius input {
+    accent-color: var(--ink);
+}
+
+[data-theme="minimal"] .legend li::before {
+    border-radius: 50%;
+}
+
+[data-theme="minimal"] .map-frame {
+    border: 0;
+}
+
+[data-theme="minimal"] .map {
+    background: var(--page);
+}
+
+[data-theme="minimal"] .leaflet-tile-pane {
+    filter: grayscale(1) contrast(0.85) brightness(1.04);
+}
+
+[data-theme="minimal"] .leaflet-control-attribution.leaflet-control {
+    background: rgb(250 250 248 / 0.85);
+    color: var(--ink-soft);
+}
+
+[data-theme="minimal"] .leaflet-control-attribution a {
+    color: var(--ink);
+}
+
+[data-theme="minimal"] .range-ring {
+    stroke: var(--ink);
+    stroke-opacity: 0.4;
+}
+
+[data-theme="minimal"] .range-ring-inner {
+    stroke-dasharray: 2 4;
+}
+
+[data-theme="minimal"] .centre-mark {
+    fill: var(--page);
+    stroke: var(--ink);
+}
+
+[data-theme="minimal"] .plane-glyph {
+    stroke: #fff;
+    stroke-width: 1.4;
+}
+
+[data-theme="minimal"] .plane-label {
+    border-left: 0;
+    background: none;
+    color: var(--ink);
+    font: 500 10px/1.4 var(--sans);
+    letter-spacing: 0.04em;
+}
+
+[data-theme="minimal"] .selected .plane-label {
+    background: var(--ink);
+    color: var(--page);
+}
+
+/* Aircraft: one per row, photo and facts swap sides every other row */
+
+[data-theme="minimal"] .bay {
+    padding: 4rem 0;
+}
+
+[data-theme="minimal"] .strips {
+    container: strips / inline-size;
+    gap: 4rem;
+    max-width: 62rem;
+}
+
+[data-theme="minimal"] .strip {
+    grid-template-columns: 17rem minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: center;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    color: var(--ink);
+    transition: none;
+}
+
+[data-theme="minimal"] .strip.alt {
+    grid-template-columns: minmax(0, 1fr) 17rem;
+    text-align: right;
+}
+
+[data-theme="minimal"] .strip.selected {
+    transform: none;
+    box-shadow: none;
+}
+
+[data-theme="minimal"] .strip-text {
+    grid-row: 1;
+    grid-column: 2;
+}
+
+[data-theme="minimal"] .strip.alt .strip-text {
+    grid-column: 1;
+}
+
+[data-theme="minimal"] .stamp {
+    grid-row: 1;
+    grid-column: 1;
+    width: auto;
+}
+
+[data-theme="minimal"] .strip.alt .stamp {
+    grid-column: 2;
+}
+
+[data-theme="minimal"] .stamp-link {
+    filter: none;
+}
+
+[data-theme="minimal"] .stamp-paper {
+    padding: 0;
+    background: none;
+    mask: none;
+}
+
+[data-theme="minimal"] .strip:not(.has-photo) .stamp-paper {
+    background: #efeeea;
+}
+
+[data-theme="minimal"] .sketch {
+    fill: var(--ink);
+    opacity: 0.15;
+}
+
+[data-theme="minimal"] .stamp-credit {
+    margin-top: 0.5rem;
+    color: var(--ink-soft);
+    font-size: 0.68rem;
+}
+
+[data-theme="minimal"] .strip-ident {
+    gap: 0.2rem 0.8rem;
+    font-family: var(--sans);
+}
+
+[data-theme="minimal"] .strip.alt .strip-ident,
+[data-theme="minimal"] .strip.alt .boxes {
+    justify-content: flex-end;
+}
+
+[data-theme="minimal"] .callsign {
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+}
+
+[data-theme="minimal"] .strip.selected .callsign {
+    text-decoration: underline 1px;
+    text-underline-offset: 0.3em;
+}
+
+[data-theme="minimal"] .type-code,
+[data-theme="minimal"] .registration {
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+}
+
+[data-theme="minimal"] .route {
+    margin-top: 0.3rem;
+    font-family: var(--sans);
+    font-size: 1.3rem;
+    font-weight: 300;
+    font-stretch: normal;
+}
+
+[data-theme="minimal"] .boxes {
+    gap: 0.4rem 1.1rem;
+    margin-top: 0.9rem;
+    border-top: 0;
+}
+
+[data-theme="minimal"] .box {
+    margin: 0;
+    padding: 0;
+    border-right: 0;
+}
+
+[data-theme="minimal"] .box dt {
+    color: var(--ink-soft);
+    font-size: 0.72rem;
+}
+
+[data-theme="minimal"] .box dd {
+    font: 400 0.92rem/1.4 var(--sans);
+    font-variant-numeric: tabular-nums;
+}
+
+[data-theme="minimal"] .box small,
+[data-theme="minimal"] .box s {
+    color: var(--ink-soft);
+}
+
+[data-theme="minimal"] .box.delayed dd {
+    color: #b8642c;
+}
+
+[data-theme="minimal"] .operator {
+    margin-top: 0.7rem;
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+}
+
+[data-theme="minimal"] .empty {
+    border: 0;
+    padding-left: 0;
+    color: var(--ink-soft);
+}
+
+@media (max-width: 56rem) {
+    [data-theme="minimal"] .layout {
+        gap: 0;
+        padding: 0 1.4rem;
+    }
+
+    [data-theme="minimal"] .chart {
+        padding-top: 2.5rem;
+    }
+
+    [data-theme="minimal"] .place-code {
+        font-size: 4.5rem;
+    }
+
+    [data-theme="minimal"] .bay {
+        padding-top: 1rem;
+    }
+}
+
+/* Stack photo and facts when the list itself is narrow, whatever the window width */
+@container strips (max-width: 42rem) {
+    [data-theme="minimal"] .strip,
+    [data-theme="minimal"] .strip.alt {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.2rem;
+        text-align: left;
+    }
+
+    [data-theme="minimal"] .strip .strip-text,
+    [data-theme="minimal"] .strip.alt .strip-text {
+        grid-row: 2;
+        grid-column: 1;
+    }
+
+    [data-theme="minimal"] .stamp,
+    [data-theme="minimal"] .strip.alt .stamp {
+        grid-column: 1;
+        max-width: 26rem;
+    }
+
+    [data-theme="minimal"] .strip.alt .strip-ident,
+    [data-theme="minimal"] .strip.alt .boxes {
+        justify-content: flex-start;
+    }
+}
